@@ -1,13 +1,16 @@
+/* Aligned with khe.money: Instrument Serif, light surface, black ink (see khe.money CSS bundle). */
 :root {
-  --bg: #0c0d10;
-  --surface: #14161c;
-  --border: #2a2e38;
-  --text: #e8eaef;
-  --muted: #8b919d;
-  --accent: #6ee7b7;
-  --accent-dim: #34d399;
-  --danger: #f87171;
-  --font: var(--font-dm, "DM Sans"), system-ui, sans-serif;
+  --bg: #ffffff;
+  --surface: #f8f9fa;
+  --surface-elevated: #ffffff;
+  --border: rgba(0, 0, 0, 0.12);
+  --text: #000000;
+  --muted: #666666;
+  --muted-soft: rgba(0, 0, 0, 0.55);
+  --accent: #0f172a;
+  --accent-hover: #1e293b;
+  --font-display: var(--font-instrument, "Instrument Serif"), Georgia, serif;
+  --font-ui: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: ui-monospace, "Cascadia Code", monospace;
 }
 
@@ -21,32 +24,47 @@ body {
   min-height: 100%;
   background: var(--bg);
   color: var(--text);
-  font-family: var(--font);
+  font-family: var(--font-display);
   line-height: 1.6;
 }
 
 a {
   color: var(--accent);
-  text-decoration: none;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 a:hover {
-  text-decoration: underline;
+  color: var(--accent-hover);
 }
 
 code {
   font-family: var(--mono);
-  font-size: 0.9em;
+  font-size: 0.88em;
   background: var(--surface);
   padding: 0.15em 0.4em;
-  border-radius: 4px;
+  border-radius: 6px;
   border: 1px solid var(--border);
 }
 
 .km-wrap {
-  max-width: 52rem;
+  max-width: 42rem;
   margin: 0 auto;
   padding: 2rem 1.25rem 4rem;
+}
+
+.km-nav {
+  margin-bottom: 1.5rem;
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+}
+
+.km-nav a {
+  text-decoration: none;
+}
+
+.km-nav a:hover {
+  text-decoration: underline;
 }
 
 .km-hero {
@@ -55,50 +73,71 @@ code {
   margin-bottom: 2rem;
 }
 
+.km-hero-tight {
+  border: none;
+  padding-top: 0;
+  margin-bottom: 1.5rem;
+}
+
 .km-hero h1 {
-  font-size: clamp(1.75rem, 4vw, 2.25rem);
-  font-weight: 700;
+  font-size: clamp(2rem, 5vw, 2.75rem);
+  font-weight: 400;
   letter-spacing: -0.02em;
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.75rem;
+  line-height: 1.15;
 }
 
 .km-tagline {
   color: var(--muted);
+  font-family: var(--font-ui);
   font-size: 1.05rem;
-  max-width: 40ch;
+  max-width: 38ch;
+  line-height: 1.65;
 }
 
 .km-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
-  margin-top: 1.5rem;
+  margin-top: 1.25rem;
+}
+
+.km-actions-wrap {
+  margin-top: 0.75rem;
 }
 
 .km-btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.35rem;
-  padding: 0.65rem 1.1rem;
-  border-radius: 8px;
+  padding: 0.65rem 1.15rem;
+  border-radius: 12px;
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   border: 1px solid var(--border);
-  background: var(--surface);
+  background: var(--surface-elevated);
   color: var(--text);
   cursor: pointer;
-  font-family: inherit;
+  font-family: var(--font-ui);
+  text-decoration: none;
+}
+
+.km-btn:hover {
+  filter: none;
+  text-decoration: none;
+  background: #f0f0f0;
 }
 
 .km-btn-primary {
-  background: linear-gradient(135deg, #059669, #34d399);
-  border-color: transparent;
-  color: #0c0d10;
+  background: #000000;
+  border-color: #000000;
+  color: #ffffff;
 }
 
 .km-btn-primary:hover {
-  filter: brightness(1.08);
-  text-decoration: none;
+  background: #1a1a1a;
+  color: #ffffff;
 }
 
 .km-section {
@@ -106,17 +145,31 @@ code {
 }
 
 .km-section h2 {
-  font-size: 1.1rem;
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
   font-weight: 600;
   margin: 0 0 0.75rem;
-  color: var(--accent);
+  color: var(--muted);
+}
+
+.km-subheading {
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin: 0 0 0.5rem;
 }
 
 .km-card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 1.25rem 1.5rem;
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
 }
 
 .km-form-grid {
@@ -126,7 +179,8 @@ code {
 
 .km-field label {
   display: block;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
+  font-family: var(--font-ui);
   color: var(--muted);
   margin-bottom: 0.35rem;
 }
@@ -135,9 +189,9 @@ code {
 .km-field textarea {
   width: 100%;
   padding: 0.55rem 0.65rem;
-  border-radius: 6px;
+  border-radius: 8px;
   border: 1px solid var(--border);
-  background: var(--bg);
+  background: var(--surface);
   color: var(--text);
   font-family: var(--mono);
   font-size: 0.85rem;
@@ -149,13 +203,100 @@ code {
 }
 
 .km-notice {
-  font-size: 0.88rem;
+  font-size: 0.9rem;
+  font-family: var(--font-ui);
   color: var(--muted);
-  border-left: 3px solid var(--accent-dim);
-  padding-left: 0.75rem;
-  margin-bottom: 1rem;
+  border-left: 3px solid var(--text);
+  padding-left: 0.85rem;
+  margin-bottom: 1.75rem;
 }
 
 .km-notice strong {
   color: var(--text);
+}
+
+.km-step {
+  margin-bottom: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.km-step:last-of-type {
+  border-bottom: none;
+}
+
+.km-step-title {
+  font-size: 1.35rem;
+  font-weight: 400;
+  margin: 0 0 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.km-step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 9999px;
+  background: #000;
+  color: #fff;
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.km-step-body {
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  color: var(--text);
+  margin: 0 0 0.75rem;
+  line-height: 1.65;
+}
+
+.km-step-body.km-muted {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.km-step-list {
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  margin: 0 0 1rem;
+  padding-left: 1.25rem;
+  color: var(--text);
+}
+
+.km-step-list li {
+  margin-bottom: 0.35rem;
+}
+
+.km-mini {
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  color: var(--muted-soft);
+  margin: 0.5rem 0 0;
+  word-break: break-all;
+}
+
+.km-advanced {
+  margin-top: 2rem;
+  padding: 1.25rem 1.25rem 1.5rem;
+  border: 1px dashed var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+.km-advanced summary {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.km-advanced[open] summary {
+  margin-bottom: 1rem;
 }

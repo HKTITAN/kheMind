@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
-import { DM_Sans } from "next/font/google";
+import { Instrument_Serif } from "next/font/google";
 import "./globals.css";
 
-const dmSans = DM_Sans({
+const instrumentSerif = Instrument_Serif({
+  weight: "400",
   subsets: ["latin"],
-  variable: "--font-dm",
+  display: "swap",
+  variable: "--font-instrument",
 });
 
 export const metadata: Metadata = {
@@ -19,8 +21,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={dmSans.variable}>
-      <body className={dmSans.className}>{children}</body>
+    <html lang="en" className={instrumentSerif.variable}>
+      <body className={instrumentSerif.className}>{children}</body>
     </html>
   );
 }

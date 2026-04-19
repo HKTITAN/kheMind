@@ -15,7 +15,7 @@ const bodySchema = z.object({
 });
 
 /**
- * Cloud ingest: GitHub Actions or Vercel Cron POST here with
+ * Cloud ingest: GitHub Actions (see `.github/workflows/reindex.yml`) POST here with
  * `Authorization: Bearer <INGEST_SECRET>` (same value as Convex `INGEST_SECRET`).
  */
 export async function POST(req: Request) {

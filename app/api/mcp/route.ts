@@ -8,6 +8,11 @@ import { sendPokeInboundMessage } from "@/lib/poke-inbound";
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
+/** Production-like hosts must not use dev MCP auth or an open Convex bridge. */
+function requiresStrictMcpAuth(): boolean {
+  return process.env.VERCEL === "1" || process.env.NODE_ENV === "production";
+}
+
 function getClient(): ConvexHttpClient {
   const url = process.env.NEXT_PUBLIC_CONVEX_URL;
   if (!url) {
@@ -18,8 +23,14 @@ function getClient(): ConvexHttpClient {
 
 const baseHandler = createMcpHandler(
   async (server) => {
-    const client = getClient();
     const bridge = process.env.BRIDGE_SECRET;
+    if (requiresStrictMcpAuth() && !bridge) {
+      throw new Error(
+        "BRIDGE_SECRET must be set on the server in production (same value in Convex env).",
+      );
+    }
+
+    const client = getClient();
 
     server.tool(
       "query_brain",
@@ -119,6 +130,22 @@ async function verifyToken(
   bearerToken?: string,
 ): Promise<AuthInfo | undefined> {
   const expected = process.env.MCP_BEARER_TOKEN;
+  const strict = requiresStrictMcpAuth();
+
+  if (strict) {
+    if (!expected) {
+      return undefined;
+    }
+    if (bearerToken !== expected) {
+      return undefined;
+    }
+    return {
+      token: bearerToken,
+      scopes: ["vault:read", "vault:write"],
+      clientId: "mcp",
+    };
+  }
+
   if (!expected) {
     return {
       token: "dev",
@@ -137,7 +164,11 @@ async function verifyToken(
 }
 
 const authWrapped = withMcpAuth(baseHandler, verifyToken, {
-  required: !!process.env.MCP_BEARER_TOKEN,
+  required: strictRequiresMcpBearer(),
 });
+
+function strictRequiresMcpBearer(): boolean {
+  return requiresStrictMcpAuth() || !!process.env.MCP_BEARER_TOKEN;
+}
 
 export { authWrapped as GET, authWrapped as POST, authWrapped as DELETE };

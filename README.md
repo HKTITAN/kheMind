@@ -4,7 +4,9 @@
 
 There is **no embedding / LLM API key** in the backend by default — ingestion is **text-only**; agents do semantic reasoning on retrieved snippets.
 
-**Live UI:** deploy this app and open `/` (landing) and **`/configure`** — a **browser-only** wizard that generates `.env` snippets for **your** Convex, Vercel, GitHub Actions, and Poke keys. Nothing is uploaded to kheMind servers.
+**Live UI:** deploy this app and open `/` (landing), **`/setup`** or **`/configure`** (Connect-first wizard + optional browser-only env generator). See **[docs/ZERO_PASTE.md](./docs/ZERO_PASTE.md)** for the zero-paste onboarding strategy.
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FHKTITAN%2FkheMind&env=NEXT_PUBLIC_CONVEX_URL%2CBRIDGE_SECRET%2CINGEST_SECRET%2CMCP_BEARER_TOKEN&envLink=https%3A%2F%2Fgithub.com%2FHKTITAN%2FkheMind%23environment-variables)
 
 ---
 
@@ -18,10 +20,11 @@ There is **no embedding / LLM API key** in the backend by default — ingestion 
 6. [GitHub Actions (ingest on push)](#github-actions-ingest-on-push)
 7. [Local development](#local-development)
 8. [Deploy to Vercel](#deploy-to-vercel)
-9. [Wiki layout](#wiki-layout)
-10. [Security](#security)
-11. [Credits](#credits)
-12. [License](#license)
+9. [Convex + Vercel (production build)](#convex--vercel-production-build)
+10. [Wiki layout](#wiki-layout)
+11. [Security](#security)
+12. [Credits](#credits)
+13. [License](#license)
 
 ---
 
@@ -39,16 +42,18 @@ Agents (Poke, Cursor, …) ──MCP HTTP /api/mcp──► query_brain, list_no
 - **Ingest:** CI or scripts POST JSON `{ files: [{ path, content }] }` with `INGEST_SECRET`.
 - **Search:** MCP tool `query_brain` runs Convex full-text search over stored chunks.
 - **Optional:** `POKE_API_KEY` on Vercel enables `send_to_poke` ([Poke inbound API](https://poke.com/docs/api)).
+- **Production MCP:** On Vercel (`VERCEL=1`) or when `NODE_ENV=production`, `/api/mcp` requires `MCP_BEARER_TOKEN`, and `BRIDGE_SECRET` must be set on the server.
 
 ---
 
 ## Quick start
 
-1. **Fork or clone** this repository.
+1. **Fork or clone** [github.com/HKTITAN/kheMind](https://github.com/HKTITAN/kheMind).
 2. **Convex** — create a project, run `npx convex dev`, set **`INGEST_SECRET`** and **`BRIDGE_SECRET`** in the Convex dashboard (same values you will use on Vercel).
-3. **Vercel** — import the repo and set env vars (see below). After deploy, open **`/configure`** on your site (browser-only env helper) or copy from `.env.example`.
-4. **GitHub Actions** — add repository secrets `VERCEL_INGEST_URL` and `INGEST_SECRET` (see [workflow](.github/workflows/reindex.yml)).
-5. **MCP client** — point Cursor or Poke at `https://<your-deployment>.vercel.app/api/mcp` with `Authorization: Bearer <MCP_BEARER_TOKEN>`.
+3. **Vercel** — use **Deploy with Vercel** above or import the repo; set env vars (see below). Prefer the **[Convex Vercel integration](https://vercel.com/integrations/convex)** to reduce manual copy ([Convex + Vercel](https://docs.convex.dev/production/hosting/vercel)).
+4. **Setup UI** — open **`/setup`** on your deployment for Connect-first steps.
+5. **GitHub Actions** — add repository secrets `VERCEL_INGEST_URL` and `INGEST_SECRET` (see [workflow](.github/workflows/reindex.yml)).
+6. **MCP client** — point Cursor or Poke at `https://<your-deployment>.vercel.app/api/mcp` with `Authorization: Bearer <MCP_BEARER_TOKEN>` (same as `poke mcp add … --api-key`).
 
 ---
 
@@ -58,11 +63,12 @@ Agents (Poke, Cursor, …) ──MCP HTTP /api/mcp──► query_brain, list_no
 |----------|--------|---------|
 | `NEXT_PUBLIC_CONVEX_URL` | Vercel | Convex deployment URL |
 | `CONVEX_DEPLOYMENT` | optional | Convex deployment name |
+| `CONVEX_DEPLOY_KEY` | Vercel (CI/build) | [Production deploy](https://docs.convex.dev/production/hosting/vercel) — use with `npm run build:vercel` |
 | `BRIDGE_SECRET` | Convex + Vercel | MCP → Convex server calls |
 | `INGEST_SECRET` | Convex + Vercel + GitHub | `POST /api/ingest` + `ingestFiles` mutation |
-| `MCP_BEARER_TOKEN` | Vercel | Protect `/api/mcp` in production (optional in local dev) |
+| `MCP_BEARER_TOKEN` | Vercel | **Required** on Vercel/production for `/api/mcp` |
 | `POKE_API_KEY` | Vercel optional | Kitchen V2 key for `send_to_poke` |
-| `NEXT_PUBLIC_GITHUB_REPO_URL` | Vercel optional | Shown on landing “View on GitHub” button |
+| `NEXT_PUBLIC_GITHUB_REPO_URL` | Vercel optional | Shown on landing “View on GitHub” (default: this repo) |
 
 Copy `.env.example` to `.env.local` for local dev.
 
@@ -83,7 +89,7 @@ Copy `.env.example` to `.env.local` for local dev.
 
 1. **Kitchen** — create a **V2 API key** for [inbound API](https://poke.com/docs/api) if you use `send_to_poke`.
 2. **MCP integration** — [poke.com/integrations/new](https://poke.com/integrations/new) — URL: `https://<your-app>.vercel.app/api/mcp`, header `Authorization: Bearer <MCP_BEARER_TOKEN>`.
-3. **CLI (optional):** [`poke` npm](https://www.npmjs.com/package/poke) — e.g. `poke mcp add <url>`, `poke tunnel` for local MCP.
+3. **CLI (optional):** [`poke` npm](https://www.npmjs.com/package/poke) — e.g. `poke mcp add <url> --name "kheMind" --api-key <MCP_BEARER_TOKEN>`.
 
 ---
 
@@ -110,30 +116,40 @@ npx convex dev
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) and [/configure](http://localhost:3000/configure).
+Open [http://localhost:3000](http://localhost:3000), [/setup](http://localhost:3000/setup), and [/configure](http://localhost:3000/configure).
 
 ---
 
 ## Deploy to Vercel
 
-**CLI (example — project name `khemind` → `khemind.vercel.app`):**
+Use the **Deploy with Vercel** button at the top, or:
 
 ```bash
 npm i -g vercel
-vercel link   # create or link project "khemind"
+vercel link
 vercel env pull .env.local   # optional
 vercel --prod
 ```
 
-Set all env vars in the Vercel project dashboard. Assign the default `*.vercel.app` hostname **khemind** in Project → Settings → Domains if you want `https://khemind.vercel.app`.
+Set all env vars in the Vercel project dashboard. After deploy, open **`/setup`** on your site for guided Connect steps.
 
-**Configure page:** after deploy, visit `https://khemind.vercel.app/configure` (or your URL) to generate env blocks in the browser.
+---
+
+## Convex + Vercel (production build)
+
+To deploy Convex functions as part of the Vercel build, set **`CONVEX_DEPLOY_KEY`** in Vercel (from Convex dashboard → Production → Deploy Key) and set the Vercel build command to:
+
+```bash
+npm run build:vercel
+```
+
+which runs `npx convex deploy --cmd "npm run build"`. See [Using Convex with Vercel](https://docs.convex.dev/production/hosting/vercel). For local development, keep using `npm run build` / `npm run dev` without the deploy key.
 
 ---
 
 ## Wiki layout
 
-The **`wiki/`** tree is documented in [wiki/STRUCTURE.md](wiki/STRUCTURE.md) (full folder map), [wiki/TEMPLATES.md](wiki/TEMPLATES.md) (which template to use), and [wiki/_index.md](wiki/_index.md) (catalog). Copy-paste starters live in [`templates/`](templates/README.md) (concepts, people, projects, references, journal, meetings, ADRs, reviews, MOCs, etc.).
+The **`wiki/`** tree is documented in [wiki/STRUCTURE.md](./wiki/STRUCTURE.md) (full folder map), [wiki/TEMPLATES.md](./wiki/TEMPLATES.md) (which template to use), and [wiki/_index.md](./wiki/_index.md) (catalog). Copy-paste starters live in [`templates/`](templates/README.md) (concepts, people, projects, references, journal, meetings, ADRs, reviews, MOCs, etc.).
 
 | Path | Role |
 |------|------|
@@ -141,7 +157,7 @@ The **`wiki/`** tree is documented in [wiki/STRUCTURE.md](wiki/STRUCTURE.md) (fu
 | `templates/` | One template per note type ([README](templates/README.md)) |
 | `sources/` | Your exports (do not commit private data in public forks) |
 | `data/`, `raw/`, `log/` | Optional drops and logs |
-| `docs/` | Integration notes ([INSIGHTS.md](docs/INSIGHTS.md)) |
+| `docs/` | Integration notes ([INSIGHTS.md](docs/INSIGHTS.md), [ZERO_PASTE.md](docs/ZERO_PASTE.md)) |
 
 ---
 

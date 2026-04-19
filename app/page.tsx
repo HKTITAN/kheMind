@@ -1,7 +1,10 @@
 import Link from "next/link";
 
 const githubHref =
-  process.env.NEXT_PUBLIC_GITHUB_REPO_URL ?? "https://github.com";
+  process.env.NEXT_PUBLIC_GITHUB_REPO_URL ?? "https://github.com/HKTITAN/kheMind";
+
+const deployVercelHref =
+  "https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FHKTITAN%2FkheMind&env=NEXT_PUBLIC_CONVEX_URL%2CBRIDGE_SECRET%2CINGEST_SECRET%2CMCP_BEARER_TOKEN&envLink=https%3A%2F%2Fgithub.com%2FHKTITAN%2FkheMind%23environment-variables";
 
 export default function Home() {
   return (
@@ -9,21 +12,18 @@ export default function Home() {
       <header className="km-hero">
         <h1>kheMind</h1>
         <p className="km-tagline">
-          A small, open stack for a compounding markdown wiki: index text in{" "}
-          <strong>Convex</strong>, expose <strong>Streamable HTTP MCP</strong> on{" "}
-          <strong>Vercel</strong>, and plug in <strong>Poke</strong> or any MCP
-          client. No embedding API required.
+          A compounding markdown wiki: index text in <strong>Convex</strong>, expose{" "}
+          <strong>Streamable HTTP MCP</strong> on <strong>Vercel</strong>, and plug in{" "}
+          <strong>Poke</strong> or any MCP client. No embedding API required.
         </p>
         <div className="km-actions">
-          <Link className="km-btn km-btn-primary" href="/configure">
-            Configure deployment
+          <a className="km-btn km-btn-primary" href={deployVercelHref}>
+            Deploy to Vercel
+          </a>
+          <Link className="km-btn" href="/setup">
+            Set up (Connect)
           </Link>
-          <a
-            className="km-btn"
-            href={githubHref}
-            target="_blank"
-            rel="noreferrer"
-          >
+          <a className="km-btn" href={githubHref} target="_blank" rel="noreferrer">
             View on GitHub
           </a>
         </div>
@@ -52,12 +52,14 @@ export default function Home() {
         <h2>Docs</h2>
         <div className="km-card">
           <p style={{ marginTop: 0 }}>
-            See the repository <strong>README.md</strong> for Convex, Vercel, Poke, and
-            GitHub Actions setup. <Link href="/configure">Configure</Link> generates env
-            snippets locally in your browser.
+            See <strong>README.md</strong> for Convex, Vercel, Poke, and GitHub Actions.{" "}
+            <Link href="/setup">Set up</Link> walks through Connect-first steps;{" "}
+            <Link href="/configure">Configure</Link> is the same wizard with an advanced
+            paste block. See <strong>docs/ZERO_PASTE.md</strong> for the onboarding
+            strategy.
           </p>
           <p style={{ marginBottom: 0, color: "var(--muted)", fontSize: "0.9rem" }}>
-            Credits and prior art: <code>CREDITS.md</code>
+            Credits: <code>CREDITS.md</code>
           </p>
         </div>
       </section>

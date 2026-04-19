@@ -12,9 +12,10 @@ Teams may install [skills.sh](https://skills.sh/docs) bundles (Convex, Vercel, G
 
 ## Secrets
 
-- **Convex:** dashboard + deploy keys for CI
-- **Vercel:** `MCP_BEARER_TOKEN`, `INGEST_SECRET`, `BRIDGE_SECRET`, optional `POKE_API_KEY` — never commit
+- **Convex:** dashboard + deploy keys for CI; `BRIDGE_SECRET` and `INGEST_SECRET` must match Vercel
+- **Vercel:** `MCP_BEARER_TOKEN` (required in production), `INGEST_SECRET`, `BRIDGE_SECRET`, optional `POKE_API_KEY`, optional `CONVEX_DEPLOY_KEY` for `build:vercel` — never commit
 - **No** OpenAI/embedding keys required for core search
+- On Vercel (`VERCEL=1`) or `NODE_ENV=production`, `/api/mcp` does not allow unauthenticated access; `BRIDGE_SECRET` must be set for MCP → Convex calls
 
 ## Layout
 
@@ -22,9 +23,10 @@ Teams may install [skills.sh](https://skills.sh/docs) bundles (Convex, Vercel, G
 - `templates/` — copy-paste starters ([templates/README.md](./templates/README.md))
 - `sources/` — user exports (privacy: avoid committing PII in public repos)
 - `data/`, `raw/`, `log/` — optional
-- `docs/` — architecture notes
+- `docs/` — architecture notes ([ZERO_PASTE.md](./docs/ZERO_PASTE.md) onboarding strategy)
 
 ## Public UI
 
-- `/` — landing
-- `/configure` — **client-only** env generator (no secrets sent to the app server)
+- `/` — landing (Deploy to Vercel, links to setup)
+- `/setup` — Connect-first onboarding wizard
+- `/configure` — same wizard (legacy path); **client-only** env generator in the advanced block (no secrets sent to the app server)

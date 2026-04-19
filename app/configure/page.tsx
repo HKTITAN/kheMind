@@ -11,15 +11,14 @@ export const metadata: Metadata = {
 export default function ConfigurePage() {
   return (
     <div className="km-wrap">
-      <nav style={{ marginBottom: "1.5rem" }}>
+      <nav className="km-nav">
         <Link href="/">← kheMind</Link>
       </nav>
-      <header className="km-hero" style={{ border: "none", paddingTop: 0 }}>
+      <header className="km-hero km-hero-tight">
         <h1>Configure your deployment</h1>
         <p className="km-tagline">
-          Fill in your Convex URL and secrets. Nothing is sent to our servers —
-          copy the output into Vercel and Convex dashboards, then wire Poke and
-          GitHub Actions.
+          Prefer Connect steps below. Advanced: generate env in your browser and paste
+          into Vercel and Convex — nothing is uploaded to kheMind.
         </p>
       </header>
       <ConfigureClient />
