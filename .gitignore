@@ -1,0 +1,65 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Next.js
+.next/
+out/
+build/
+dist/
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Convex
+.convex/
+
+# Debug
+npm-debug.log*
+.DS_Store
+
+# Vercel
+.vercel
+
+# IDE
+.idea/
+
+# npx skills add — symlinks into many agent home dirs (regenerate via skills-lock.json)
+.agents/
+.adal/
+.augment/
+.bob/
+.claude/
+.codebuddy/
+.commandcode/
+.continue/
+.cortex/
+.crush/
+.factory/
+.goose/
+.iflow/
+.junie/
+.kilocode/
+.kiro/
+.kode/
+.mcpjam/
+.mux/
+.neovate/
+.openhands/
+.pi/
+.pochi/
+.qoder/
+.qwen/
+.roo/
+.trae/
+.vibe/
+.windsurf/
+.zencoder/
+
+tsconfig.tsbuildinfo
+
+# Local skills sync (npx skills experimental_sync) — use skills-lock.json to restore
+skills/

@@ -1,0 +1,50 @@
+name: Reindex vault (ingest to Convex)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "wiki/**"
+      - "sources/**"
+      - "log/**"
+      - "raw/**"
+      - "data/**"
+
+  workflow_dispatch:
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build payload
+        run: node scripts/build-ingest-payload.cjs > payload.json
+
+      - name: POST to Vercel ingest
+        env:
+          INGEST_URL: ${{ secrets.VERCEL_INGEST_URL }}
+          INGEST_SECRET: ${{ secrets.INGEST_SECRET }}
+        run: |
+          if [ -z "$INGEST_URL" ] || [ -z "$INGEST_SECRET" ]; then
+            echo "Skip ingest: set VERCEL_INGEST_URL and INGEST_SECRET in repo secrets."
+            exit 0
+          fi
+          curl -fsS -X POST "$INGEST_URL" \
+            -H "Authorization: Bearer $INGEST_SECRET" \
+            -H "Content-Type: application/json" \
+            -d @payload.json
+
+      - name: Notify Poke (optional)
+        env:
+          POKE_API_KEY: ${{ secrets.POKE_API_KEY }}
+        run: |
+          if [ -z "$POKE_API_KEY" ]; then
+            echo "Skip: add repo secret POKE_API_KEY to ping Poke after ingest."
+            exit 0
+          fi
+          MSG="Second brain: ingest finished for ${{ github.repository }}@${{ github.sha }}"
+          curl -fsS -X POST "https://poke.com/api/v1/inbound/api-message" \
+            -H "Authorization: Bearer $POKE_API_KEY" \
+            -H "Content-Type: application/json" \
+            -d "{\"message\": \"$MSG\"}"

@@ -1,0 +1,36 @@
+{
+  "name": "khemind",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Markdown vault → Convex full-text search → Streamable HTTP MCP (Poke, Cursor, …)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/khemind.git"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "tsc --noEmit",
+    "convex:dev": "convex dev",
+    "convex:deploy": "convex deploy",
+    "poke:notify": "node scripts/poke-notify.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.26.0",
+    "convex": "^1.35.1",
+    "mcp-handler": "^1.1.0",
+    "next": "^15.5.15",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "@types/react": "^19.2.14",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^16.2.4",
+    "typescript": "^6.0.3"
+  }
+}
