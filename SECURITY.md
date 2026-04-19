@@ -27,6 +27,8 @@ Authorization for `/api/mcp`, `/api/ingest`, and Convex cannot rely on browser-o
 
 When `VERCEL=1` or `NODE_ENV=production`, `/api/mcp` **requires** `MCP_BEARER_TOKEN` (no permissive “dev” bypass). The MCP handler also **requires** `BRIDGE_SECRET` in that mode so the Convex bridge is not left open.
 
+**Poke CLI parity:** The same secret is used as `poke mcp add <url> --name "kheMind" --api-key <MCP_BEARER_TOKEN>` ([poke npm](https://www.npmjs.com/package/poke)) — that is the `Authorization: Bearer` value the MCP handler expects in production.
+
 ## Threat notes
 
 - **Full MCP access** with a single bearer token grants read/write as exposed by tools. Rotate `MCP_BEARER_TOKEN` if leaked.

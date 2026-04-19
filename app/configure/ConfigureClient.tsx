@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { SetupVerifyResponse } from "@/lib/setup-verify-types";
+import { VERCEL_DEPLOY_CLONE_HREF } from "@/lib/vercel-deploy-button";
 
 function randomHex(bytes: number): string {
   const arr = new Uint8Array(bytes);
@@ -17,9 +18,6 @@ function quartzBaseFromDeployment(deploymentUrl: string): string {
     return "";
   }
 }
-
-const DEPLOY_VERCEL_HREF =
-  "https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FHKTITAN%2FkheMind&env=NEXT_PUBLIC_CONVEX_URL%2CBRIDGE_SECRET%2CINGEST_SECRET%2CMCP_BEARER_TOKEN%2CQUARTZ_BASE_URL%2CVAULT_VIEW_PASSWORD%2CVAULT_VIEW_COOKIE_TOKEN&envLink=https%3A%2F%2Fgithub.com%2FHKTITAN%2FkheMind%23environment-variables";
 
 export function ConfigureClient() {
   const [deploymentUrl, setDeploymentUrl] = useState("");
@@ -67,6 +65,14 @@ export function ConfigureClient() {
       return `${deploymentUrl.replace(/\/$/, "")}/api/mcp`;
     }
   }, [deploymentUrl]);
+
+  /** Best-effort prefilled MCP URL for Poke's integration UI (ignored if unsupported). */
+  const pokeIntegrationsHref = useMemo(() => {
+    if (!mcpEndpoint || mcpEndpoint.includes("example.com")) {
+      return "https://poke.com/integrations/new";
+    }
+    return `https://poke.com/integrations/new?mcpUrl=${encodeURIComponent(mcpEndpoint)}`;
+  }, [mcpEndpoint]);
 
   const quartzBaseUrl = useMemo(
     () => quartzBaseFromDeployment(deploymentUrl),
@@ -269,10 +275,18 @@ export function ConfigureClient() {
   return (
     <>
       <p className="km-notice">
-        <strong>Privacy:</strong> Secret generation runs in your browser. Service checks
-        run on <strong>this app&apos;s server</strong> (your deployment or local dev):
-        they send your values only to Convex and your own <code>deploymentBaseUrl</code>{" "}
-        to confirm ingest, MCP, and vault — nothing is logged or sent elsewhere.
+        <strong>Connect-first:</strong> use the official Convex integration and Poke UI
+        when you can. Open <strong>Advanced</strong> below only if you need to generate
+        secrets and paste env manually. Service checks run on this app&apos;s server —
+        see{" "}
+        <a
+          href="https://github.com/HKTITAN/kheMind/blob/main/SECURITY.md"
+          target="_blank"
+          rel="noreferrer"
+        >
+          SECURITY.md
+        </a>{" "}
+        for details.
       </p>
 
       <section className="km-step" aria-labelledby="step-deploy">
@@ -280,24 +294,49 @@ export function ConfigureClient() {
           <span className="km-step-num">1</span> Deploy
         </h2>
         <p className="km-step-body">
-          Create a Vercel project from this template. Add env vars in the dashboard (or
-          paste the generated block from step 3 after you generate secrets).
+          Create a Vercel project from this template. The deploy flow asks for env var
+          names; use the README link for definitions, or generate values in Advanced after
+          your first deploy.
         </p>
         <div className="km-actions">
-          <a className="km-btn km-btn-primary" href={DEPLOY_VERCEL_HREF}>
+          <a className="km-btn km-btn-primary" href={VERCEL_DEPLOY_CLONE_HREF}>
             Deploy to Vercel
           </a>
         </div>
       </section>
 
-      <section className="km-step" aria-labelledby="step-urls">
-        <h2 id="step-urls" className="km-step-title">
-          <span className="km-step-num">2</span> URLs &amp; Convex
+      <section className="km-step" aria-labelledby="step-convex">
+        <h2 id="step-convex" className="km-step-title">
+          <span className="km-step-num">2</span> Connect Convex
         </h2>
         <p className="km-step-body">
-          Set your live app URL (used for ingest/MCP links, Quartz base, and checks).
-          Add your Convex deployment URL from the dashboard or the Vercel Convex
-          integration.
+          Prefer the marketplace integration so <code>NEXT_PUBLIC_CONVEX_URL</code> (and
+          optionally the deploy key) is provisioned into Vercel without dashboard
+          copy-paste.
+        </p>
+        <ul className="km-step-list">
+          <li>
+            <a
+              href="https://vercel.com/integrations/convex"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Convex on Vercel Marketplace
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://docs.convex.dev/production/hosting/vercel"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Convex + Vercel hosting guide
+            </a>
+          </li>
+        </ul>
+        <p className="km-step-body">
+          If anything is still missing, set your deployment URL and Convex URL here, then
+          check reachability.
         </p>
         <div className="km-form-grid">
           <div className="km-field">
@@ -331,38 +370,67 @@ export function ConfigureClient() {
             {convexCheckLoading ? "Checking…" : "Authorize: Convex URL"}
           </button>
         </div>
-        <ul className="km-step-list">
-          <li>
-            <a
-              href="https://vercel.com/integrations/convex"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Convex on Vercel Marketplace
-            </a>
-          </li>
-          <li>
-            <a
-              href="https://docs.convex.dev/production/hosting/vercel"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Convex + Vercel hosting guide
-            </a>
-          </li>
-        </ul>
       </section>
 
-      <section className="km-step" aria-labelledby="step-secrets">
-        <h2 id="step-secrets" className="km-step-title">
-          <span className="km-step-num">3</span> Generate &amp; paste env
+      <section className="km-step" aria-labelledby="step-poke">
+        <h2 id="step-poke" className="km-step-title">
+          <span className="km-step-num">3</span> Connect Poke
         </h2>
         <p className="km-step-body">
-          Generate random secrets, then copy the block into{" "}
-          <strong>Vercel</strong> and the same bridge/ingest values into{" "}
-          <strong>Convex → Settings → Environment Variables</strong>.{" "}
-          <code>QUARTZ_BASE_URL</code> is filled from your deployment hostname for RSS and
-          links; rebuild the garden with <code>npm run quartz:build</code> after deploy.
+          Register your MCP endpoint in Poke. Use the same bearer as{" "}
+          <code>MCP_BEARER_TOKEN</code> as <code>poke mcp add … --api-key</code> per the{" "}
+          <a href="https://www.npmjs.com/package/poke" target="_blank" rel="noreferrer">
+            poke npm
+          </a>
+          .
+        </p>
+        <div className="km-actions km-actions-wrap">
+          <a
+            className="km-btn km-btn-primary"
+            href={pokeIntegrationsHref}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Open Poke integrations
+          </a>
+          <a
+            className="km-btn"
+            href="https://poke.com/settings/connections/integrations/new"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Alternate: Connections → new
+          </a>
+        </div>
+        <p className="km-mini">
+          MCP URL: <code>{mcpEndpoint || "Set deployment URL above"}</code>
+        </p>
+        <p className="km-mini">
+          CLI: <code>{pokeCliSnippet}</code>
+        </p>
+      </section>
+
+      <section className="km-step" aria-labelledby="step-github">
+        <h2 id="step-github" className="km-step-title">
+          <span className="km-step-num">4</span> GitHub Actions
+        </h2>
+        <p className="km-step-body">
+          Your markdown lives in <strong>your</strong> GitHub repo. Add repository
+          secrets so pushes can call your ingest endpoint — one-time setup in GitHub
+          Settings (true zero-paste for repo secrets would need a GitHub App; see{" "}
+          <a href="https://github.com/HKTITAN/kheMind/blob/main/docs/ZERO_PASTE.md">
+            docs/ZERO_PASTE.md
+          </a>
+          ). Values to paste are shown under Advanced below.
+        </p>
+      </section>
+
+      <details className="km-advanced">
+        <summary>Advanced — generate &amp; paste env manually</summary>
+        <p className="km-step-body">
+          Use this if the Convex integration did not cover everything, or you need
+          aligned secrets for Convex + Vercel + GitHub. Generate random secrets in your
+          browser, then copy into each dashboard.
         </p>
 
         <div className="km-field km-field-inline">
@@ -481,16 +549,15 @@ export function ConfigureClient() {
             <textarea readOnly value={githubSecretsHint} rows={12} spellCheck={false} />
           </div>
         </div>
-      </section>
+      </details>
 
       <section className="km-step" aria-labelledby="step-verify">
         <h2 id="step-verify" className="km-step-title">
-          <span className="km-step-num">4</span> Authorize deployed services
+          <span className="km-step-num">5</span> Authorize deployed services
         </h2>
         <p className="km-step-body">
-          After Vercel + Convex env are saved and the app has redeployed, run checks to
-          confirm ingest, MCP bearer, and (if enabled) vault login. Uses your deployment
-          URL above.
+          After env is saved on Vercel and Convex and the app has redeployed, run checks
+          to confirm ingest, MCP bearer, and (if enabled) vault login.
         </p>
         <div className="km-actions">
           <button
@@ -508,8 +575,8 @@ export function ConfigureClient() {
           </button>
         </div>
         <p className="km-mini">
-          Requires deployment URL, INGEST_SECRET, and MCP_BEARER_TOKEN. Include vault
-          password when the gate is enabled.
+          Requires deployment URL, INGEST_SECRET, and MCP_BEARER_TOKEN (from Advanced).
+          Include vault password when the gate is enabled.
         </p>
         {verifyResults ? (
           <ul className="km-verify-list">
@@ -519,45 +586,6 @@ export function ConfigureClient() {
             {resultLine("Vault", verifyResults.results.vault)}
           </ul>
         ) : null}
-      </section>
-
-      <section className="km-step" aria-labelledby="step-poke">
-        <h2 id="step-poke" className="km-step-title">
-          <span className="km-step-num">5</span> Connect Poke
-        </h2>
-        <p className="km-step-body">
-          Point Poke at your MCP URL with the same bearer as{" "}
-          <code>MCP_BEARER_TOKEN</code>.
-        </p>
-        <div className="km-actions km-actions-wrap">
-          <a
-            className="km-btn km-btn-primary"
-            href="https://poke.com/integrations/new"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Open Poke integrations
-          </a>
-        </div>
-        <p className="km-mini">
-          MCP URL: <code>{mcpEndpoint || "Set deployment URL above"}</code>
-        </p>
-        <p className="km-mini">
-          CLI: <code>{pokeCliSnippet}</code>
-        </p>
-      </section>
-
-      <section className="km-step" aria-labelledby="step-github">
-        <h2 id="step-github" className="km-step-title">
-          <span className="km-step-num">6</span> GitHub Actions
-        </h2>
-        <p className="km-step-body">
-          Add repository secrets so pushes can call your ingest endpoint. See{" "}
-          <a href="https://github.com/HKTITAN/kheMind/blob/main/docs/ZERO_PASTE.md">
-            docs/ZERO_PASTE.md
-          </a>
-          .
-        </p>
       </section>
     </>
   );

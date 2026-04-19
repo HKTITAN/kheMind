@@ -1,4 +1,7 @@
-/* Aligned with khe.money: Instrument Serif, light surface, black ink (see khe.money CSS bundle). */
+/*
+ * Visual tone aligned with khe.money (harshitkhemani.com portfolio):
+ * Instrument Serif display, light surface, black ink, minimal chrome.
+ */
 :root {
   --bg: #ffffff;
   --surface: #f8f9fa;

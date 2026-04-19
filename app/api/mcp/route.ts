@@ -125,6 +125,7 @@ const baseHandler = createMcpHandler(
   { basePath: "/api" },
 );
 
+/** Production / Vercel: require `MCP_BEARER_TOKEN`; local dev without the var uses permissive mode only when not strict. */
 async function verifyToken(
   _req: Request,
   bearerToken?: string,

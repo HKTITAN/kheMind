@@ -17,6 +17,7 @@ const bodySchema = z.object({
 /**
  * Cloud ingest: GitHub Actions (see `.github/workflows/reindex.yml`) POST here with
  * `Authorization: Bearer <INGEST_SECRET>` (same value as Convex `INGEST_SECRET`).
+ * Set `VERCEL_INGEST_URL` + `INGEST_SECRET` as repository secrets, not in workflow YAML.
  */
 export async function POST(req: Request) {
   const auth = req.headers.get("authorization");

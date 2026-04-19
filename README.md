@@ -6,7 +6,9 @@ There is **no embedding / LLM API key** in the backend by default — ingestion 
 
 **Live UI:** deploy this app and open `/` (landing), **`/setup`** or **`/configure`** (guided env: auto-filled `QUARTZ_BASE_URL`, optional vault gate, and **Authorize** checks for Convex URL, ingest, MCP, and vault). See **[docs/ZERO_PASTE.md](./docs/ZERO_PASTE.md)** for the zero-paste onboarding strategy.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FHKTITAN%2FkheMind&env=NEXT_PUBLIC_CONVEX_URL%2CBRIDGE_SECRET%2CINGEST_SECRET%2CMCP_BEARER_TOKEN%2CQUARTZ_BASE_URL%2CVAULT_VIEW_PASSWORD%2CVAULT_VIEW_COOKIE_TOKEN&envLink=https%3A%2F%2Fgithub.com%2FHKTITAN%2FkheMind%23environment-variables)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FHKTITAN%2FkheMind&env=NEXT_PUBLIC_CONVEX_URL%2CBRIDGE_SECRET%2CINGEST_SECRET%2CMCP_BEARER_TOKEN%2CQUARTZ_BASE_URL%2CVAULT_VIEW_PASSWORD%2CVAULT_VIEW_COOKIE_TOKEN&envLink=https%3A%2F%2Fgithub.com%2FHKTITAN%2FkheMind%23environment-variables&envDescription=Use%20the%20Convex%20Vercel%20integration%20for%20NEXT_PUBLIC_CONVEX_URL%20when%20possible.%20Generate%20BRIDGE_SECRET%2C%20INGEST_SECRET%2C%20and%20MCP_BEARER_TOKEN%20on%20your%20deployment%20at%20%2Fsetup%20(or%20paste%20from%20Advanced).%20QUARTZ_BASE_URL%20and%20VAULT_*%20are%20optional.)
+
+The same URL is exported from [`lib/vercel-deploy-button.ts`](lib/vercel-deploy-button.ts) for the landing and setup pages.
 
 ---
 

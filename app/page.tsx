@@ -1,10 +1,10 @@
 import Link from "next/link";
+import { VERCEL_DEPLOY_CLONE_HREF } from "@/lib/vercel-deploy-button";
 
 const githubHref =
   process.env.NEXT_PUBLIC_GITHUB_REPO_URL ?? "https://github.com/HKTITAN/kheMind";
 
-const deployVercelHref =
-  "https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FHKTITAN%2FkheMind&env=NEXT_PUBLIC_CONVEX_URL%2CBRIDGE_SECRET%2CINGEST_SECRET%2CMCP_BEARER_TOKEN%2CQUARTZ_BASE_URL%2CVAULT_VIEW_PASSWORD%2CVAULT_VIEW_COOKIE_TOKEN&envLink=https%3A%2F%2Fgithub.com%2FHKTITAN%2FkheMind%23environment-variables";
+const deployVercelHref = VERCEL_DEPLOY_CLONE_HREF;
 
 export default function Home() {
   return (
@@ -61,9 +61,9 @@ export default function Home() {
         <div className="km-card">
           <p style={{ marginTop: 0 }}>
             See <strong>README.md</strong> for Convex, Vercel, Poke, and GitHub Actions.{" "}
-            <Link href="/setup">Set up</Link> walks through Connect-first steps;{" "}
-            <Link href="/configure">Configure</Link> is the same wizard with an advanced
-            paste block. See <strong>docs/ZERO_PASTE.md</strong> for the onboarding
+            <Link href="/setup">Set up</Link> walks through Connect-first steps (Advanced
+            is collapsed until you need paste/generate). <Link href="/configure">Configure</Link>{" "}
+            is the same wizard. See <strong>docs/ZERO_PASTE.md</strong> for the onboarding
             strategy.
           </p>
           <p style={{ marginBottom: 0, color: "var(--muted)", fontSize: "0.9rem" }}>
