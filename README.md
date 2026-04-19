@@ -133,12 +133,15 @@ Set all env vars in the Vercel project dashboard. Assign the default `*.vercel.a
 
 ## Wiki layout
 
+The **`wiki/`** tree is documented in [wiki/STRUCTURE.md](wiki/STRUCTURE.md) (full folder map), [wiki/TEMPLATES.md](wiki/TEMPLATES.md) (which template to use), and [wiki/_index.md](wiki/_index.md) (catalog). Copy-paste starters live in [`templates/`](templates/README.md) (concepts, people, projects, references, journal, meetings, ADRs, reviews, MOCs, etc.).
+
 | Path | Role |
 |------|------|
-| `wiki/` | Curated pages; see [wiki/STRUCTURE.md](wiki/STRUCTURE.md), [wiki/_index.md](wiki/_index.md) |
+| `wiki/` | Curated markdown: `meta/`, `concepts/`, `people/` (+ `organizations/`), `projects/`, `areas/`, `playbooks/`, `references/{books,papers,articles,courses}/`, `journal/YYYY/`, `meetings/`, `decisions/`, `resources/tools/`, `questions/`, `reviews/`, `moc/` |
+| `templates/` | One template per note type ([README](templates/README.md)) |
 | `sources/` | Your exports (do not commit private data in public forks) |
 | `data/`, `raw/`, `log/` | Optional drops and logs |
-| `docs/` | Extra notes ([INSIGHTS.md](docs/INSIGHTS.md)) |
+| `docs/` | Integration notes ([INSIGHTS.md](docs/INSIGHTS.md)) |
 
 ---
 

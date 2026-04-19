@@ -18,7 +18,8 @@ Teams may install [skills.sh](https://skills.sh/docs) bundles (Convex, Vercel, G
 
 ## Layout
 
-- `wiki/` — curated markdown (`wiki/STRUCTURE.md`)
+- `wiki/` — curated markdown: [wiki/STRUCTURE.md](./wiki/STRUCTURE.md), [wiki/TEMPLATES.md](./wiki/TEMPLATES.md), [wiki/_index.md](./wiki/_index.md); includes `meta/`, `concepts/`, `people/organizations/`, `projects/`, `areas/`, `playbooks/`, `references/{books,papers,articles,courses}/`, `journal/YYYY/`, `meetings/`, `decisions/`, `resources/tools/`, `questions/`, `reviews/`, `moc/`
+- `templates/` — copy-paste starters ([templates/README.md](./templates/README.md))
 - `sources/` — user exports (privacy: avoid committing PII in public repos)
 - `data/`, `raw/`, `log/` — optional
 - `docs/` — architecture notes

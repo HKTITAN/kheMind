@@ -1,55 +1,86 @@
 # Wiki structure (kheMind)
 
-This tree merges **Karpathy’s “LLM Wiki” pattern** ([gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f)) with **operational / content-system** notes inspired by [@DeRonin_](https://x.com/DeRonin_/status/2042604279077237170) and fits the existing **Convex + MCP** repo layout.
+This tree follows **Karpathy’s LLM Wiki** idea ([gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f)): raw sources stay outside; **`wiki/`** is the compiled, interlinked layer. See also [TEMPLATES.md](./TEMPLATES.md) for which template to use where.
 
 ## Three layers (Karpathy)
 
 | Layer | In this repo | Role |
 |-------|----------------|------|
-| **Raw sources** | `raw/`, `sources/`, `data/` | Immutable inputs; you curate; agents read, don’t rewrite originals. |
-| **Wiki** | `wiki/` | LLM-maintained markdown: entities, concepts, projects, playbooks, meta. |
-| **Schema / agent rules** | `AGENTS.md`, `.cursor/rules`, ingest + MCP | How agents ingest, search (`query_brain`), and log work. |
+| **Raw sources** | `raw/`, `sources/`, `data/` | Immutable inputs; you curate; agents read originals. |
+| **Wiki** | `wiki/` (this tree) | Markdown pages: concepts, people, projects, references, journal, … |
+| **Schema / agents** | `AGENTS.md`, ingest, MCP | How agents search (`query_brain`) and maintain pages. |
 
-## Directory tree
+## Full directory tree
 
 ```text
 wiki/
   STRUCTURE.md          ← this file
-  _index.md             ← content catalog (expand as pages grow)
-  meta/                 ← pattern docs, vault philosophy, source citations
-  concepts/             ← abstract topics (frameworks, mental models)
-  people/               ← people & profiles
-  projects/             ← initiatives, products, games, workstreams
-  playbooks/            ← repeatable workflows (content ops, prompts, pipelines)
+  TEMPLATES.md          ← folder → template mapping
+  _index.md             ← master catalog
+  README.md             ← onboarding blurb
+  meta/                 ← vault ops, citations, lint
+  concepts/             ← ideas, models, definitions
+  people/
+    organizations/      ← companies, teams, communities
+  projects/             ← bounded initiatives
+  areas/                ← ongoing responsibilities (PARA)
+  playbooks/            ← SOPs, prompts, pipelines
+  references/
+    books/
+    papers/
+    articles/
+    courses/
+  journal/
+    YYYY/               ← one folder per year
+  meetings/             ← notes from conversations
+  decisions/            ← ADRs & decision log
+  resources/
+    tools/              ← apps, CLI, stack
+  questions/            ← research / open questions
+  reviews/              ← weekly, quarterly
+  moc/                  ← maps of content (hub pages)
 ```
 
-**Also at repo root (not under `wiki/`):**
+**Outside `wiki/` (repo root):**
 
-- `log/` — chronological logs; Karpathy-style **`log.md`** pattern can be a single file here or split by month.
-- `templates/` — note templates.
-- `docs/` — integration notes (Poke, insights).
+- `log/` — append-only operational log (optional `log.md` style).
+- `templates/` — **copy-paste starters** for every note type ([templates/README.md](../templates/README.md)).
+- `docs/` — kheMind integration docs (Convex, Poke).
 
-## Operations (Karpathy names)
+## Operations
 
-| Op | Meaning here |
-|----|----------------|
-| **Ingest** | Push markdown into Convex (`/api/ingest`, GitHub Action); agents then **compile** insights into `wiki/` pages. |
-| **Query** | Ask questions; use MCP `query_brain` + read `wiki/`; file good answers back as new pages. |
-| **Lint** | Periodic pass: orphans, stale claims, missing links — documented in `meta/`. |
+| Op | Meaning |
+|----|---------|
+| **Ingest** | CI / `POST /api/ingest` pushes file text into Convex for search. |
+| **Query** | MCP `query_brain` + reading `wiki/` in your editor. |
+| **Lint** | Orphans, stale claims, missing links — [meta/lint-checklist.md](./meta/lint-checklist.md). |
 
-## Index + log
+## PARA-style mapping (optional)
 
-- **`wiki/_index.md`** — category-oriented catalog (entities, concepts, projects, playbooks). Update when you add important pages.
-- **Chronological log** — append-only timeline of ingests and maintenance passes (`log/` or `log.md`).
+| PARA | Primary folders here |
+|------|---------------------|
+| **Projects** | `projects/` |
+| **Areas** | `areas/` |
+| **Resources** | `references/`, `resources/` |
+| **Archive** | use `status: archived` in frontmatter or `projects/archived/` if you prefer |
 
-## What to put where
+## What goes where (one glance)
 
-| Kind of content | Place |
-|-----------------|--------|
-| “Who is X?” | `wiki/people/` |
-| “What is Y (idea)?” | `wiki/concepts/` |
-| “Project Z roadmap / notes” | `wiki/projects/` |
-| Prompt packs, SOPs, content pipelines | `wiki/playbooks/` |
-| Why this vault exists, citations | `wiki/meta/` |
+| Question | Folder |
+|----------|--------|
+| Who? | `people/`, `people/organizations/` |
+| What idea? | `concepts/` |
+| What initiative? | `projects/` |
+| What long-term hat? | `areas/` |
+| What procedure? | `playbooks/` |
+| What did I read/watch? | `references/*` |
+| What happened today? | `journal/YYYY/` |
+| What was said in a room? | `meetings/` |
+| What did we decide? | `decisions/` |
+| What tool or link list? | `resources/` |
+| What don’t I know yet? | `questions/` |
+| How was my week/quarter? | `reviews/` |
+| Hub page for a topic? | `moc/` |
+| How does my vault work? | `meta/` |
 
-Cross-link with `[[wikilinks]]` or markdown links; search still works on plain text in Convex.
+Cross-link with `[[wikilinks]]` or markdown links; Convex search indexes plain text.

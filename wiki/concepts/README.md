@@ -1,7 +1,17 @@
 # concepts/
 
-Abstract topics: frameworks, mental models, principles — not tied to one person or one project.
+**Abstract knowledge:** definitions, mental models, frameworks—things that aren’t a specific person, project, or dated event.
 
-Examples: “LLM Wiki pattern”, “second brain”, “content engine”, decision frameworks you reuse.
+## Template
 
-Cross-link from `wiki/people/` and `wiki/projects/` when relevant.
+Use [`templates/concept.md`](../../templates/concept.md).
+
+## When to create a concept page
+
+- You use a term in multiple projects or references.
+- You want a **single definition** to link to instead of repeating prose.
+
+## Examples in this vault
+
+- [Compounding systems](./compounding-systems.md)
+- [Second brain vs RAG](./second-brain-vs-rag.md)

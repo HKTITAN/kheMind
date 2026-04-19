@@ -1,7 +1,15 @@
 # playbooks/
 
-Repeatable workflows: prompt packs, SOPs, content pipelines, research checklists.
+**Repeatable workflows:** checklists, prompt chains, SOPs, content pipelines—anything you run more than twice the same way.
 
-**Inspired by:** systematic social/content operations (e.g. [DeRonin content engine notes](../meta/deronin-content-engine.md)) and by filing **good query answers** back into the wiki ([Karpathy pattern](../meta/karpathy-llm-wiki.md)).
+## Template
 
-Keep one playbook per file or per folder; link from `wiki/_index.md` when stable.
+[`templates/playbook.md`](../../templates/playbook.md)
+
+## Naming
+
+`verb-noun-playbook.md` or `context-ritual.md` (e.g. `weekly-review-playbook.md`).
+
+## Pages
+
+- [Example — weekly review](./example-weekly-review-playbook.md)
