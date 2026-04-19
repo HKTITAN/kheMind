@@ -21,6 +21,10 @@ dist/
 npm-debug.log*
 .DS_Store
 
+# Quartz → Next static (regenerate: npm run quartz:build)
+public/garden/*
+!public/garden/.gitkeep
+
 # Vercel
 .vercel
 

@@ -21,6 +21,7 @@ kheMind builds on ideas and tools from the community. If you extend this project
 | [Poke](https://poke.com/) | MCP client + optional [inbound API](https://poke.com/docs/api) (`send_to_poke`). |
 | [`poke` (npm)](https://www.npmjs.com/package/poke) | CLI (`poke mcp add`, `poke tunnel`) for local/dev wiring. |
 | [Model Context Protocol](https://modelcontextprotocol.io/) | Tool protocol for agents. |
+| [Quartz 4](https://quartz.jzhao.xyz/) ([jackyzha0/quartz](https://github.com/jackyzha0/quartz)) | Static-site generator for the `/garden` vault viewer (`vault-quartz/`). |
 
 ## Optional tooling (from referenced docs)
 

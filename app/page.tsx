@@ -4,7 +4,7 @@ const githubHref =
   process.env.NEXT_PUBLIC_GITHUB_REPO_URL ?? "https://github.com/HKTITAN/kheMind";
 
 const deployVercelHref =
-  "https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FHKTITAN%2FkheMind&env=NEXT_PUBLIC_CONVEX_URL%2CBRIDGE_SECRET%2CINGEST_SECRET%2CMCP_BEARER_TOKEN&envLink=https%3A%2F%2Fgithub.com%2FHKTITAN%2FkheMind%23environment-variables";
+  "https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FHKTITAN%2FkheMind&env=NEXT_PUBLIC_CONVEX_URL%2CBRIDGE_SECRET%2CINGEST_SECRET%2CMCP_BEARER_TOKEN%2CQUARTZ_BASE_URL%2CVAULT_VIEW_PASSWORD%2CVAULT_VIEW_COOKIE_TOKEN&envLink=https%3A%2F%2Fgithub.com%2FHKTITAN%2FkheMind%23environment-variables";
 
 export default function Home() {
   return (
@@ -22,6 +22,9 @@ export default function Home() {
           </a>
           <Link className="km-btn" href="/setup">
             Set up (Connect)
+          </Link>
+          <Link className="km-btn" href="/garden">
+            Vault (Quartz)
           </Link>
           <a className="km-btn" href={githubHref} target="_blank" rel="noreferrer">
             View on GitHub
@@ -43,6 +46,11 @@ export default function Home() {
             </li>
             <li>
               <code>wiki/</code> + <code>sources/</code> as git-tracked truth (your repo)
+            </li>
+            <li>
+              <a href="https://quartz.jzhao.xyz/">Quartz 4</a> at <code>/garden</code> after{" "}
+              <code>npm run quartz:build</code> — optional login via{" "}
+              <Link href="/vault/login">/vault/login</Link> when configured
             </li>
           </ul>
         </div>

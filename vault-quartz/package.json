@@ -1,0 +1,15 @@
+{
+  "name": "khemind-vault-quartz",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22",
+    "npm": ">=10.9.2"
+  },
+  "scripts": {
+    "build": "quartz build --directory ../wiki --output ../public/garden"
+  },
+  "devDependencies": {
+    "@jackyzha0/quartz": "github:jackyzha0/quartz#v4"
+  }
+}

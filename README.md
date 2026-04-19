@@ -4,9 +4,9 @@
 
 There is **no embedding / LLM API key** in the backend by default — ingestion is **text-only**; agents do semantic reasoning on retrieved snippets.
 
-**Live UI:** deploy this app and open `/` (landing), **`/setup`** or **`/configure`** (Connect-first wizard + optional browser-only env generator). See **[docs/ZERO_PASTE.md](./docs/ZERO_PASTE.md)** for the zero-paste onboarding strategy.
+**Live UI:** deploy this app and open `/` (landing), **`/setup`** or **`/configure`** (guided env: auto-filled `QUARTZ_BASE_URL`, optional vault gate, and **Authorize** checks for Convex URL, ingest, MCP, and vault). See **[docs/ZERO_PASTE.md](./docs/ZERO_PASTE.md)** for the zero-paste onboarding strategy.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FHKTITAN%2FkheMind&env=NEXT_PUBLIC_CONVEX_URL%2CBRIDGE_SECRET%2CINGEST_SECRET%2CMCP_BEARER_TOKEN&envLink=https%3A%2F%2Fgithub.com%2FHKTITAN%2FkheMind%23environment-variables)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FHKTITAN%2FkheMind&env=NEXT_PUBLIC_CONVEX_URL%2CBRIDGE_SECRET%2CINGEST_SECRET%2CMCP_BEARER_TOKEN%2CQUARTZ_BASE_URL%2CVAULT_VIEW_PASSWORD%2CVAULT_VIEW_COOKIE_TOKEN&envLink=https%3A%2F%2Fgithub.com%2FHKTITAN%2FkheMind%23environment-variables)
 
 ---
 
@@ -21,10 +21,11 @@ There is **no embedding / LLM API key** in the backend by default — ingestion 
 7. [Local development](#local-development)
 8. [Deploy to Vercel](#deploy-to-vercel)
 9. [Convex + Vercel (production build)](#convex--vercel-production-build)
-10. [Wiki layout](#wiki-layout)
-11. [Security](#security)
-12. [Credits](#credits)
-13. [License](#license)
+10. [Quartz vault viewer ( /garden )](#quartz-vault-viewer--garden)
+11. [Wiki layout](#wiki-layout)
+12. [Security](#security)
+13. [Credits](#credits)
+14. [License](#license)
 
 ---
 
@@ -51,7 +52,7 @@ Agents (Poke, Cursor, …) ──MCP HTTP /api/mcp──► query_brain, list_no
 1. **Fork or clone** [github.com/HKTITAN/kheMind](https://github.com/HKTITAN/kheMind).
 2. **Convex** — create a project, run `npx convex dev`, set **`INGEST_SECRET`** and **`BRIDGE_SECRET`** in the Convex dashboard (same values you will use on Vercel).
 3. **Vercel** — use **Deploy with Vercel** above or import the repo; set env vars (see below). Prefer the **[Convex Vercel integration](https://vercel.com/integrations/convex)** to reduce manual copy ([Convex + Vercel](https://docs.convex.dev/production/hosting/vercel)).
-4. **Setup UI** — open **`/setup`** on your deployment for Connect-first steps.
+4. **Setup UI** — open **`/setup`** on your deployment: paste Convex URL, generate secrets, copy env into Vercel/Convex, redeploy, then **Run full verification** to confirm ingest and MCP (and vault if enabled).
 5. **GitHub Actions** — add repository secrets `VERCEL_INGEST_URL` and `INGEST_SECRET` (see [workflow](.github/workflows/reindex.yml)).
 6. **MCP client** — point Cursor or Poke at `https://<your-deployment>.vercel.app/api/mcp` with `Authorization: Bearer <MCP_BEARER_TOKEN>` (same as `poke mcp add … --api-key`).
 
@@ -69,8 +70,23 @@ Agents (Poke, Cursor, …) ──MCP HTTP /api/mcp──► query_brain, list_no
 | `MCP_BEARER_TOKEN` | Vercel | **Required** on Vercel/production for `/api/mcp` |
 | `POKE_API_KEY` | Vercel optional | Kitchen V2 key for `send_to_poke` |
 | `NEXT_PUBLIC_GITHUB_REPO_URL` | Vercel optional | Shown on landing “View on GitHub” (default: this repo) |
+| `QUARTZ_BASE_URL` | optional | Quartz RSS/sitemap, e.g. `myapp.vercel.app/garden` (no `https://`) |
+| `VAULT_VIEW_PASSWORD` | Vercel optional | With `VAULT_VIEW_COOKIE_TOKEN`, gates `/garden` behind `/vault/login` |
+| `VAULT_VIEW_COOKIE_TOKEN` | Vercel optional | Long random value; httpOnly cookie must match after login |
 
 Copy `.env.example` to `.env.local` for local dev.
+
+---
+
+## Quartz vault viewer (/garden)
+
+Browse your vault as a static site using **[Quartz 4](https://quartz.jzhao.xyz/)** — search, graph, wikilinks, and the rest of the [Quartz feature set](https://quartz.jzhao.xyz/features).
+
+1. **Install & build** (Node **≥ 22**): `cd vault-quartz && npm install && cd .. && npm run quartz:build`
+2. **Open** `/garden` on your deployment (or run `npm run quartz:build` then `npm run dev` locally).
+3. **Optional auth** — set `VAULT_VIEW_PASSWORD` and `VAULT_VIEW_COOKIE_TOKEN` in Vercel so visitors must sign in at `/vault/login` before `/garden`. If unset, `/garden` stays public.
+
+Production build including Quartz: `npm run build:with-quartz`. See **[docs/QUARTZ.md](./docs/QUARTZ.md)** and **[vault-quartz/README.md](./vault-quartz/README.md)**.
 
 ---
 
@@ -157,7 +173,8 @@ The **`wiki/`** tree is documented in [wiki/STRUCTURE.md](./wiki/STRUCTURE.md) (
 | `templates/` | One template per note type ([README](templates/README.md)) |
 | `sources/` | Your exports (do not commit private data in public forks) |
 | `data/`, `raw/`, `log/` | Optional drops and logs |
-| `docs/` | Integration notes ([INSIGHTS.md](docs/INSIGHTS.md), [ZERO_PASTE.md](docs/ZERO_PASTE.md)) |
+| `docs/` | Integration notes ([INSIGHTS.md](docs/INSIGHTS.md), [ZERO_PASTE.md](docs/ZERO_PASTE.md), [QUARTZ.md](docs/QUARTZ.md)) |
+| `vault-quartz/` | [Quartz 4](https://quartz.jzhao.xyz/) config + dependency; output → `public/garden` |
 
 ---
 

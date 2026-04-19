@@ -8,12 +8,16 @@
 | `BRIDGE_SECRET`     | Convex + Vercel                      | Server-to-server calls from MCP to Convex    |
 | `MCP_BEARER_TOKEN`  | Vercel (required in production)      | Bearer auth for `/api/mcp` on Vercel / `NODE_ENV=production` |
 | `POKE_API_KEY`      | Vercel only                          | Optional: MCP tool `send_to_poke` → [Poke inbound API](https://poke.com/docs/api) (V2 key from Kitchen) |
+| `VAULT_VIEW_PASSWORD` | Vercel optional                    | With `VAULT_VIEW_COOKIE_TOKEN`, protects `/garden` (Quartz HTML); login at `/vault/login` |
+| `VAULT_VIEW_COOKIE_TOKEN` | Vercel optional                | Long random string; must match httpOnly cookie after successful login |
 
 No embedding or LLM API keys are required for core vault search — chunks are plain text; search uses Convex **full-text** index.
 
+If **`VAULT_VIEW_*`** is not set, **`/garden` is world-readable** (static files under `public/garden`). Treat `VAULT_VIEW_COOKIE_TOKEN` like a session secret.
+
 Never commit real values. Use `.env.example` as a template.
 
-The **`/configure`** and **`/setup`** pages can **generate** env text **only in the browser** — they do not POST secrets to kheMind. **Primary onboarding** should use [official integrations](https://vercel.com/integrations/convex) and the Poke integrations UI where possible; see [docs/ZERO_PASTE.md](./docs/ZERO_PASTE.md).
+The **`/configure`** and **`/setup`** pages **generate** env text in the browser and can **authorize** each integration via **`POST /api/setup/verify-services`** on **your** deployment: that route uses your submitted values only for outbound checks to Convex and your own `deploymentBaseUrl` (ingest, MCP `initialize`, optional vault login). It does not log secrets or send them to third parties. **Primary onboarding** should still use [official integrations](https://vercel.com/integrations/convex) and the Poke integrations UI where possible; see [docs/ZERO_PASTE.md](./docs/ZERO_PASTE.md).
 
 ## Why checks stay on the server
 

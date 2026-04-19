@@ -29,4 +29,5 @@ Teams may install [skills.sh](https://skills.sh/docs) bundles (Convex, Vercel, G
 
 - `/` — landing (Deploy to Vercel, links to setup)
 - `/setup` — Connect-first onboarding wizard
-- `/configure` — same wizard (legacy path); **client-only** env generator in the advanced block (no secrets sent to the app server)
+- `/configure` — same wizard (legacy path); env block is built in the browser; **Authorize** checks use `POST /api/setup/verify-services` on your deployment (outbound only to Convex + your `deploymentBaseUrl`)
+- `/garden` — [Quartz 4](https://quartz.jzhao.xyz/) static site from `wiki/` (`npm run quartz:build` → `public/garden`); optional gate via `VAULT_VIEW_PASSWORD` + `VAULT_VIEW_COOKIE_TOKEN` + `/vault/login`

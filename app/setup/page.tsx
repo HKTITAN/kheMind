@@ -5,7 +5,7 @@ import { ConfigureClient } from "../configure/ConfigureClient";
 export const metadata: Metadata = {
   title: "Setup — kheMind",
   description:
-    "Connect-first setup for Convex, Vercel, Poke, and GitHub — no secrets sent to kheMind servers.",
+    "Guided Convex + Vercel env, Quartz base URL, optional vault gate, and service authorization checks.",
 };
 
 export default function SetupPage() {
@@ -17,8 +17,9 @@ export default function SetupPage() {
       <header className="km-hero km-hero-tight">
         <h1>Set up your brain</h1>
         <p className="km-tagline">
-          Deploy, connect Convex and Poke, then keep your notes in GitHub. Use the
-          advanced section only if you need to paste env vars manually.
+          Set your deployment URL and Convex URL, generate secrets, paste env into
+          Vercel and Convex, then verify ingest and MCP. Add GitHub secrets for CI when
+          you are ready.
         </p>
       </header>
       <ConfigureClient />
